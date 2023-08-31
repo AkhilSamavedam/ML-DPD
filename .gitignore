@@ -1,0 +1,41 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local development environment
+venv/
+.idea/
+
+# Compiled Python files
+*.pyc
+*.pyo
+__pycache__/
+
+# Python distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Miscellaneous
+*.swp
+.DS_Store
+
+# Data
+
+MNF/
+Dump/
+CSV/
+Numpy/
+latent/
+results/
+
+!MNF/*.md
+!Dump/*.md
+!CSV/*.md
+!Numpy/*.md
+!latent/*.md
+!results/*.md
