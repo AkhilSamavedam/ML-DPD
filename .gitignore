@@ -32,6 +32,7 @@ CSV/
 Numpy/
 latent/
 results/
+legend/
 
 !MNF/*.md
 !Dump/*.md
@@ -39,3 +40,4 @@ results/
 !Numpy/*.md
 !latent/*.md
 !results/*.md
+!legend/*.md
