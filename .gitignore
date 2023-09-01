@@ -26,18 +26,11 @@ build/
 
 # Data
 
-MNF/
-Dump/
-CSV/
-Numpy/
-latent/
-results/
-legend/
-
-!MNF/*.md
-!Dump/*.md
-!CSV/*.md
-!Numpy/*.md
-!latent/*.md
-!results/*.md
-!legend/*.md
+**/*.MNF
+**/*.dump
+**/*.csv
+**/*.npy
+**/*.ckpt
+**/*.ckpt.*
+**/checkpoint
+**/*.h5
