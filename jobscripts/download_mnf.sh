@@ -7,7 +7,7 @@
 #SBATCH --out=/gpfs/scratch/asamavedam/out/test-out.%j
 #SBATCH --error=/gpfs/scratch/asamavedam/err/test-err.%j
 
-cd /gpfs/scratch/asamavedam/ML-DPD/data_formatting
+cd /gpfs/scratch/asamavedam/MLDPD
 
 source /gpfs/scratch/asamavedam/venv/bin/activate
-python download_mnf.py
+python data_formatting/download_mnf.py
