@@ -40,7 +40,7 @@ def download_files(item):
     done = False
     while done is False:
         status, done = downloader.next_chunk()
-        print(f"Download {file_name[7:]} {int(status.progress() * 100)}%")
+        print(f"Download {file_name} {int(status.progress() * 100)}%")
 
 
 for item in items:
