@@ -10,7 +10,7 @@ K = np.load(j('results/256/koopman.npy'))
 decoder = tf.keras.models.load_model(j('results/256/decoder.h5'))
 
 pathname = j('latent/256')
-state_pathname = j('Numpygits')
+state_pathname = j('Numpy')
 def natural_sort_key(s):
     return [int(text) if text.isdigit() else text for text in re.split(r'(\d+)', s)]
 
