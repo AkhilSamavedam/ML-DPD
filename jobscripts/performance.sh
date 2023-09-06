@@ -1,10 +1,10 @@
 #!/bin/sh
-#SBATCH --job-name=train_conv_ae
+#SBATCH --job-name=performance
 #SBATCH --nodes=1
-#SBATCH -p p100 
+#SBATCH -p gpu 
 #SBATCH --time=8:00:00
 #SBATCH --out=/gpfs/scratch/asamavedam/out/test-out.%j
 #SBATCH --error=/gpfs/scratch/asamavedam/err/test-err.%j
 cd /gpfs/scratch/asamavedam/ML-DPD
 module load tensorflow2-gpu/2.2.0
-python model/test_edmd.py 
+python model/performance.py 

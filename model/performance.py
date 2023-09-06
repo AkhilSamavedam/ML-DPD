@@ -23,11 +23,9 @@ state_ls = [i for i in state_ls if i.endswith('.npy')]
 ls.sort(key=natural_sort_key)
 state_ls.sort(key=natural_sort_key)
 
-latent_vectors = np.array([np.load(i) for i in ls])
-states = np.array([np.load(i) for i in state_ls])
+latent_vectors = np.array([np.load(os.path.join(pathname, i)) for i in ls])
+states = np.array([np.load(os.path.join(state_pathname, i)) for i in state_ls])
 
-
-history_file = j('results/256/edmd.csv')
 
 entries = []
 
@@ -58,7 +56,7 @@ for i in range(len(ls) - 10):
         latent_mae = tf.reduce_mean(tf.abs(actual_latent - latent))
         mae = tf.reduce_mean(tf.abs(actual_state - predicted_state))
 
-        epsilon = 1e-10
+        epsilon = 1e-13
         latent_percent = 100 * np.sum(np.abs(predicted_latent - actual_latent)) / (np.sum(np.abs(actual_latent)) + epsilon)
         percent = 100 * np.sum(np.abs(predicted_state - actual_state)) / (np.sum(np.abs(actual_latent)) + epsilon)
 
@@ -75,4 +73,4 @@ for i in range(len(ls) - 10):
         print(f'{ls[i][:-4]} --> {ls[i + n][:-4]}')
     entries.append(dictionary)
 df = pd.DataFrame.from_records(entries, index=['timestep'])
-df.to_csv(j('results/256/edmd.csv'))
+df.to_csv(j('results/256/performance.csv'))
