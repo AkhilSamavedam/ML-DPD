@@ -34,3 +34,7 @@ build/
 **/*.ckpt.*
 **/checkpoint
 **/*.h5
+
+# Include
+
+!results/*/performance.csv
