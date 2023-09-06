@@ -68,7 +68,7 @@ for i in range(len(ls) - 10):
         dictionary[f'latent%_{n}'] = float(latent_percent)
         dictionary[f'%_{n}'] = float(percent)
 
-        dictionary[f'time_{n}'] = float(prediction_time / 1000)  # converting time to ms
+        dictionary[f'time_{n}'] = float(prediction_time * 1000)  # converting time to ms
 
         print(f'{ls[i][:-4]} --> {ls[i + n][:-4]}')
     entries.append(dictionary)
