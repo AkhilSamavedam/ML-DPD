@@ -35,6 +35,8 @@ build/
 **/checkpoint
 **/*.h5
 
+results/*/*.png
+
 # Include
 
 !results/*/performance.csv
