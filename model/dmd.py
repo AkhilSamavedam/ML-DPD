@@ -26,7 +26,7 @@ def perform_edmd(observable_functions, dt=0.01):
     X = observable_functions[:, :-1]  # Snapshot matrix
     Y = observable_functions[:, 1:]   # Shifted snapshot matrix
 
-    K_approximation = X @ np.linalg.pinv(Y)
+    K_approximation = np.linalg.pinv(X) @ Y
     eigenvalues, eigenvectors = np.linalg.eig(K_approximation)
 
     frequencies = np.log(eigenvalues) / dt
@@ -52,7 +52,7 @@ koopman_operator, frequencies, dynamic_modes, initial_condition, reconstructed_m
 print("Koopman Operator Approximation:")
 print(koopman_operator)
 
-np.save('results/256/koopman.npy', koopman_operator)
+np.save('results/256/koopman_alt.npy', koopman_operator)
 
 print("Eigenvalues (Frequency):")
 print(frequencies)

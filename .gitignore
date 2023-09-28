@@ -40,3 +40,4 @@ results/*/*.png
 # Include
 
 !results/*/performance.csv
+!results/*/performance_alt.csv

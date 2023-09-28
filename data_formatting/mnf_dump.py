@@ -69,7 +69,7 @@ def read_and_process_file(input_file):
                 break
 
 # Replace 'input_file.txt' with the path to your input file
-ls = glob.glob(j('MNF/*'))
+ls = glob.glob(j('MNF/*.mnf'))
 
 with mp.Pool() as pool:
     pool.map(read_and_process_file, ls)
