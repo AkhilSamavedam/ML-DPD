@@ -5,6 +5,6 @@
 #SBATCH --time=8:00:00
 #SBATCH --out=/gpfs/scratch/asamavedam/out/test-out.%j
 #SBATCH --error=/gpfs/scratch/asamavedam/err/test-err.%j
-cd /gpfs/scratch/asamavedam/MLDPD
+cd /gpfs/scratch/asamavedam/ML-DPD
 module load tensorflow2-gpu/2.2.0
 python model/autoencoder.py 

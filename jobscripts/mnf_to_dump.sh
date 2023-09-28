@@ -2,7 +2,7 @@
 
 #SBATCH --nodes=1
 #SBATCH --time=04:00:00
-#SBATCH --job-name=csv_writing
+#SBATCH --job-name=np_writing
 #SBATCH -p gpu 
 #SBATCH --out=/gpfs/scratch/asamavedam/out/test-out.%j
 #SBATCH --error=/gpfs/scratch/asamavedam/err/test-err.%j
@@ -13,5 +13,5 @@ module load mvapich2/gcc/64/2.2rc1
 module load lammps/gpu/11Aug17
 
 source /gpfs/scratch/asamavedam/venv/bin/activate
-python data_formatting/format_ds.py
+python data_formatting/mnf_dump.py
 
