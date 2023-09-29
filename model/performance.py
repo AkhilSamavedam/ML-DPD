@@ -38,7 +38,7 @@ for i in range(len(ls) - 10):
     for n in range(1, 10):
 
         start_time = time.time()
-        predicted_latent = (latent.T @ np.linalg.matrix_power(K, n))
+        predicted_latent = (latent @ np.linalg.matrix_power(K, n))
         predicted_state = decoder.predict(predicted_latent)
         end_time = time.time()
 
