@@ -23,10 +23,10 @@ def read_latent_vectors(folder_path):
 
 def perform_edmd(observable_functions, dt=0.01):
     observable_functions = observable_functions[:, :int(0.8 * observable_functions.shape[1])]
-    X = observable_functions[:, :-1]  # Snapshot matrix
-    Y = observable_functions[:, 1:]   # Shifted snapshot matrix
+    X = observable_functions[:, :-1].T  # Snapshot matrix
+    Y = observable_functions[:, 1:].T   # Shifted snapshot matrix
 
-    K_approximation = Y @ np.linalg.pinv(X)
+    K_approximation = np.linalg.pinv(X) @ Y
     eigenvalues, eigenvectors = np.linalg.eig(K_approximation)
 
     frequencies = np.log(eigenvalues) / dt

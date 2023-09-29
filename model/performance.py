@@ -6,7 +6,7 @@ import pandas as pd
 from config import j
 from time import time
 
-K = np.load(j('results/256/koopman_alt.npy'))
+K = np.load(j('results/256/koopman.npy'))
 decoder = tf.keras.models.load_model(j('results/256/decoder.h5'))
 
 pathname = j('latent/256')
@@ -38,7 +38,7 @@ for i in range(len(ls) - 10):
     for n in range(1, 10):
 
         start_time = time()
-        predicted_latent = (np.linalg.matrix_power(K, n) @ latent.T).T
+        predicted_latent = latent @ np.linalg.matrix_power(K, n)
         predicted_state = decoder.predict(predicted_latent)
         end_time = time()
 
@@ -73,4 +73,4 @@ for i in range(len(ls) - 10):
         print(f'{ls[i][:-4]} --> {ls[i + n][:-4]}')
     entries.append(dictionary)
 df = pd.DataFrame.from_records(entries, index=['timestep'])
-df.to_csv(j('results/256/performance_alt.csv'))
+df.to_csv(j('results/256/performance.csv'))
