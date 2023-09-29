@@ -4,7 +4,7 @@ import os
 import re
 import pandas as pd
 from config import j
-import time
+from time import time
 
 K = np.load(j('results/256/koopman_alt.npy'))
 decoder = tf.keras.models.load_model(j('results/256/decoder.h5'))
@@ -34,13 +34,13 @@ for i in range(len(ls) - 10):
 
     dictionary = {'timestep': int(ls[i][:-4])}
     latent = latent_vectors[i]
-
+    decoder.predict(np.zeros((1, 256))) # To Make sure there is no lag on tensorflow startup
     for n in range(1, 10):
 
-        start_time = time.time()
-        predicted_latent = (latent @ np.linalg.matrix_power(K, n))
+        start_time = time()
+        predicted_latent = (np.linalg.matrix_power(K, n) @ latent.T).T
         predicted_state = decoder.predict(predicted_latent)
-        end_time = time.time()
+        end_time = time()
 
         prediction_time = end_time - start_time
 
