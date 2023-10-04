@@ -10,7 +10,6 @@ venv/
 # Compiled Python files
 *.pyc
 *.pyo
-__pycache__/
 
 # Python distribution / packaging
 dist/
@@ -23,6 +22,7 @@ build/
 # Miscellaneous
 *.swp
 .DS_Store
+model/test.py
 
 # Data
 
@@ -36,8 +36,7 @@ build/
 **/*.h5
 
 results/*/*.png
+results/*/*.pdf
 
 # Include
-
 !results/*/performance.csv
-!results/*/performance_alt.csv
