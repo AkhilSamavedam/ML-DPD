@@ -1,0 +1,24 @@
+[submodule "Dump"]
+	path = Dump
+	url = .
+	branch = master
+[submodule "CSV"]
+	path = CSV
+	url = .
+	branch = master
+[submodule "Numpy"]
+	path = Numpy
+	url = .
+	branch = master
+[submodule "latent"]
+	path = latent
+	url = .
+	branch = develop
+[submodule "legend"]
+	path = legend
+	url = .
+	branch = release
+[submodule "MNF"]
+	path = MNF
+	url = .
+	branch = main
