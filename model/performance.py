@@ -3,13 +3,15 @@ import numpy as np
 import os
 import re
 import pandas as pd
-from config import j
+from config import j, dim
 from time import time
 
-K = np.load(j('results/256/koopman.npy'))
-decoder = tf.keras.models.load_model(j('results/256/decoder.h5'))
+latent_dim = dim()
 
-pathname = j('latent/256')
+K = np.load(j(f'results/{latent_dim}/koopman.npy'))
+decoder = tf.keras.models.load_model(j(f'results/{latent_dim}/decoder.h5'))
+
+pathname = j(f'latent/{latent_dim}')
 state_pathname = j('Numpy')
 def natural_sort_key(s):
     return [int(text) if text.isdigit() else text for text in re.split(r'(\d+)', s)]
@@ -73,4 +75,4 @@ for i in range(len(ls) - 10):
         print(f'{ls[i][:-4]} --> {ls[i + n][:-4]}')
     entries.append(dictionary)
 df = pd.DataFrame.from_records(entries, index=['timestep'])
-df.to_csv(j('results/256/performance.csv'))
+df.to_csv(j(f'results/{latent_dim}/performance.csv'))

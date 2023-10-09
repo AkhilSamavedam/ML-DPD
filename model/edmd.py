@@ -1,7 +1,9 @@
 import os
 import re
 import numpy as np
-from config import j
+from config import j, dim
+
+latent_dim = dim()
 
 def natural_sort_key(s):
     # Extract the numeric part from the filename using regex
@@ -21,7 +23,7 @@ def read_latent_vectors(folder_path):
     return np.column_stack(latent_vectors)
 
 
-def perform_edmd(observable_functions, dt=0.01):
+def perform_edmd(observable_functions, dt=250e-6):
     observable_functions = observable_functions[:, :int(0.8 * observable_functions.shape[1])]
     X = observable_functions[:, :-1].T  # Snapshot matrix
     Y = observable_functions[:, 1:].T   # Shifted snapshot matrix
@@ -44,7 +46,7 @@ def perform_edmd(observable_functions, dt=0.01):
 
 
 # Example usage (replace state_matrix with your actual input matrix):
-state_matrix = read_latent_vectors(j('latent/256'))  # 128 features (variables), 22 snapshots
+state_matrix = read_latent_vectors(j(f'latent/{latent_dim}'))  # 128 features (variables), 22 snapshots
 
 koopman_operator, frequencies, dynamic_modes, initial_condition, reconstructed_modes = perform_edmd(state_matrix)
 
@@ -52,7 +54,7 @@ koopman_operator, frequencies, dynamic_modes, initial_condition, reconstructed_m
 print("Koopman Operator Approximation:")
 print(koopman_operator)
 
-np.save('results/256/koopman_alt.npy', koopman_operator)
+np.save(j(f'results/{latent_dim}/koopman_alt.npy'), koopman_operator)
 
 print("Eigenvalues (Frequency):")
 print(frequencies)

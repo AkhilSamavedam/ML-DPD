@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import os
-from config import j
+from config import j, dim
 
 strategy = tf.distribute.MirroredStrategy()
 
@@ -87,7 +87,7 @@ def create_dataset_from_npy_folder(folder_path=j('Numpy'), batch_size=32, train_
 
     return train_dataset, val_dataset, file_list
 
-latent_dim = 512 
+latent_dim = dim() 
 input_shape = (4200, 244, 3)
 
 
@@ -111,7 +111,7 @@ with strategy.scope():
 
     autoencoder.compile(optimizer='adam', loss='mse')
 
-checkpoint_path = j('results/256/autoencoder_checkpoint.ckpt')
+checkpoint_path = j(f'results/{latent_dim}/autoencoder_checkpoint.ckpt')
 checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     filepath=checkpoint_path,
     save_weights_only=True,
@@ -132,7 +132,7 @@ history = autoencoder.fit(
 )
 
 # Save the training history to a file (CSV format)
-history_file = j('results/256/training_history.csv')
+history_file = j(f'results/{latent_dim}/training_history.csv')
 with open(history_file, "w") as f:
     f.write("epoch,loss,val_loss\n")
     for epoch, loss, val_loss in zip(range(1, len(history.history['loss']) + 1),
@@ -141,6 +141,6 @@ with open(history_file, "w") as f:
         f.write(f"{epoch},{loss},{val_loss}\n")
 
 # Save the trained model (optional)
-autoencoder.save(j('results/256/autoencoder_model.h5'))
-encoder.save(j('results/256/encoder.h5'))
-decoder.save(j('results/256/decoder.h5'))
+autoencoder.save(j(f'results/{latent_dim}/autoencoder.h5'))
+encoder.save(j(f'results/{latent_dim}/encoder.h5'))
+decoder.save(j(f'results/{latent_dim}/decoder.h5'))
