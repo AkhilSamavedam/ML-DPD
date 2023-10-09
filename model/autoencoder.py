@@ -87,7 +87,7 @@ def create_dataset_from_npy_folder(folder_path=j('Numpy'), batch_size=32, train_
 
     return train_dataset, val_dataset, file_list
 
-latent_dim = 256
+latent_dim = 512 
 input_shape = (4200, 244, 3)
 
 

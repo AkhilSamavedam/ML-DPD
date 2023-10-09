@@ -7,7 +7,7 @@
 #SBATCH --out=/gpfs/scratch/asamavedam/out/test-out.%j
 #SBATCH --error=/gpfs/scratch/asamavedam/err/test-err.%j
 
-cd /gpfs/scratch/asamavedam/ML-DPD
+cd /gpfs/home/asamavedam/ML-DPD
 
 module load mvapich2/gcc/64/2.2rc1
 module load lammps/gpu/11Aug17
