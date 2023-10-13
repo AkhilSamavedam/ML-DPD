@@ -25,7 +25,6 @@ build/
 model/test.py
 
 # Data
-
 **/*.mnf
 **/*.dump
 **/*.csv
@@ -37,6 +36,13 @@ model/test.py
 
 results/*/*.png
 results/*/*.pdf
+
+# Symlinks
+CSV
+Numpy
+latent
+MNF
+Dump
 
 # Include
 !results/*/performance.csv
