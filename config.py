@@ -6,4 +6,4 @@ def j(rel_path):
     return os.path.join(PROJECT_DIR, rel_path)
 
 def dim():
-    return 512
+    return 1024 
