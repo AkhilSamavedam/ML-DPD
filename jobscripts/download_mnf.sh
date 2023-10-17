@@ -9,5 +9,5 @@
 
 cd /gpfs/home/asamavedam/ML-DPD
 
-source /gpfs/scratch/asamavedam/venv/bin/activate
+module load jax/0.4.18
 python data_formatting/download_mnf.py

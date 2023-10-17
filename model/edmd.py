@@ -1,6 +1,6 @@
 import os
 import re
-import numpy as np
+import jax.numpy as jnp
 from config import j, dim
 
 latent_dim = dim()
@@ -18,9 +18,9 @@ def read_latent_vectors(folder_path):
     for filename in ls:
         if filename.endswith(".npy"):
             filepath = os.path.join(folder_path, filename)
-            latent_vector = np.load(filepath)
+            latent_vector = jnp.load(filepath)
             latent_vectors.append(latent_vector[0])
-    return np.column_stack(latent_vectors)
+    return jnp.column_stack(latent_vectors)
 
 
 def perform_edmd(observable_functions, dt=250e-6):
@@ -28,19 +28,19 @@ def perform_edmd(observable_functions, dt=250e-6):
     X = observable_functions[:, :-1].T  # Snapshot matrix
     Y = observable_functions[:, 1:].T   # Shifted snapshot matrix
 
-    K_approximation = np.linalg.pinv(X) @ Y
-    eigenvalues, eigenvectors = np.linalg.eig(K_approximation)
+    K_approximation = jnp.linalg.pinv(X) @ Y
+    eigenvalues, eigenvectors = jnp.linalg.eig(K_approximation)
 
-    frequencies = np.log(eigenvalues) / dt
+    frequencies = jnp.log(eigenvalues) / dt
 
-    initial_condition = np.linalg.pinv(eigenvectors) @ observable_functions[:, 0]
+    initial_condition = jnp.linalg.pinv(eigenvectors) @ observable_functions[:, 0]
 
     # Reconstruct the dynamic modes over time
     num_snapshots = observable_functions.shape[1]
-    time_indices = np.arange(num_snapshots) * dt
-    dynamic_modes = np.zeros((eigenvectors.shape[0], num_snapshots), dtype=np.complex64)
+    time_indices = jnp.arange(num_snapshots) * dt
+    dynamic_modes = jnp.zeros((eigenvectors.shape[0], num_snapshots), dtype=jnp.complex64)
     for i in range(num_snapshots):
-        dynamic_modes[:, i] = (eigenvectors * np.exp(frequencies * time_indices[i])) @ initial_condition
+        dynamic_modes[:, i] = (eigenvectors * jnp.exp(frequencies * time_indices[i])) @ initial_condition
 
     return K_approximation, frequencies, eigenvectors, initial_condition, dynamic_modes
 
@@ -54,7 +54,7 @@ koopman_operator, frequencies, dynamic_modes, initial_condition, reconstructed_m
 print("Koopman Operator Approximation:")
 print(koopman_operator)
 
-np.save(j(f'results/{latent_dim}/koopman_alt.npy'), koopman_operator)
+jnp.save(j(f'results/{latent_dim}/koopman.npy'), koopman_operator)
 
 print("Eigenvalues (Frequency):")
 print(frequencies)

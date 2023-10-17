@@ -20,9 +20,10 @@ def Encoder(latent_dim, input_shape):
     x = tf.keras.layers.MaxPooling2D((2, 2), padding='same')(x)
     x = tf.keras.layers.Conv2D(64, (3, 3), activation='relu', padding='same')(x)
     x = tf.keras.layers.MaxPooling2D((2, 2), padding='same')(x)
-
     x = tf.keras.layers.Flatten()(x)
     encoder_output = tf.keras.layers.Dense(latent_dim, activation='linear')(x)
+
+
     encoder = tf.keras.Model(encoder_input, encoder_output)
     return encoder
 

@@ -12,6 +12,6 @@ cd /gpfs/home/asamavedam/ML-DPD
 module load mvapich2/gcc/64/2.2rc1
 module load lammps/gpu/11Aug17
 
-source /gpfs/scratch/asamavedam/venv/bin/activate
+module load jax/0.4.18
 python data_formatting/csv_to_numpy.py
 

@@ -6,5 +6,5 @@
 #SBATCH --out=/gpfs/scratch/asamavedam/out/test-out.%j
 #SBATCH --error=/gpfs/scratch/asamavedam/err/test-err.%j
 cd /gpfs/home/asamavedam/ML-DPD
-module load tensorflow2-gpu/2.2.0
+module load jax/0.4.18
 python model/autoencoder.py 
