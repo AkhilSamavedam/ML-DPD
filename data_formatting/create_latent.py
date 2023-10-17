@@ -10,9 +10,13 @@ latent_dim = dim()
 
 folder_path = j('Numpy')
 ls = glob(j('Numpy/*.npy'))
-@jit
-def create_latent(X):
+
+
+def create_latent(fn):
+    X = jnp.load(fn)
     tensor = jnp.expand_dims(X, axis=0)
     encoded_tensor = encode(tensor)
     jnp.save(j(f'latent/{latent_dim}/{os.path.basename(fn)[6:]}'), encoded_tensor)
-[create_latent(jnp.load(fn)) for fn in ls]
+
+
+[create_latent(fn) for fn in ls]
