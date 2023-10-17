@@ -14,11 +14,9 @@ decoder = tf.keras.models.load_model(j(f'results/{latent_dim}/decoder.h5'))
 encoder = jax2tf.convert(encoder)
 decoder = jax2tf.convert(decoder)
 
-@jit
 def encode(X):
     return encoder(X)
 
-@jit
 def decode(X):
     return decoder(X)
 
