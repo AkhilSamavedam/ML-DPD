@@ -7,4 +7,4 @@
 #SBATCH --error=/gpfs/scratch/asamavedam/err/test-err.%j
 cd /gpfs/home/asamavedam/ML-DPD
 module load jax/0.4.18
-python autoencoder.py
+python model/autoencoder.py

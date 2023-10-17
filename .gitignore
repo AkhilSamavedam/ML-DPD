@@ -23,6 +23,7 @@ build/
 *.swp
 .DS_Store
 model/test.py
+jobscripts/test.sh
 
 # Data
 **/*.mnf
