@@ -1,7 +1,8 @@
 import tensorflow as tf
 import numpy as np
 import os
-from config import j, dim
+from config import j, latent_shape, tensor_shape
+from utils import selu
 
 strategy = tf.distribute.MirroredStrategy()
 
@@ -44,7 +45,8 @@ def Decoder(latent_dim, input_shape):
     x = tf.keras.layers.UpSampling2D((2, 2))(x)
     x = tf.keras.layers.Conv2DTranspose(32, (3, 3), activation='relu', padding='same')(x)
     x = tf.keras.layers.UpSampling2D((2, 2))(x)
-    x = tf.keras.layers.Conv2DTranspose(3, (3, 3), activation='selu', padding='same')(x)
+    x = tf.keras.layers.Conv2DTranspose(3, (3, 3), activation='linear', padding='same')(x)
+    x = tf.keras.layers.Lambda(selu)(x)
     decoder_output = tf.keras.layers.Cropping2D(cropping=((0, 24), (0, 12)))(x)
     return tf.keras.Model(decoder_input, decoder_output)
 
@@ -88,8 +90,8 @@ def create_dataset_from_npy_folder(folder_path=j('Numpy'), batch_size=32, train_
 
     return train_dataset, val_dataset, file_list
 
-latent_dim = dim() 
-input_shape = (4200, 244, 3)
+latent_dim = latent_shape()
+input_shape = tensor_shape()
 
 
 # Distribute the datasets with input context using strategy.run

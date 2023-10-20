@@ -2,11 +2,11 @@ import tensorflow as tf
 import jax.numpy as jnp
 from glob import glob
 import os
-from config import j, dim
-from utils import encode
+from config import j, latent_shape
+from encoder_decoder import encode
 from jax import jit
 
-latent_dim = dim()
+latent_dim = latent_shape()
 
 folder_path = j('Numpy')
 ls = glob(j('Numpy/*.npy'))

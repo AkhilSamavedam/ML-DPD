@@ -5,11 +5,11 @@ from jax import jit, vmap, pmap, grad
 import os
 import re
 import pandas as pd
-from config import j, dim
+from config import j, latent_shape
 from time import time
-from utils import decode
+from encoder_decoder import decode
 
-latent_dim = dim()
+latent_dim = latent_shape()
 
 K = jnp.load(j(f'results/{latent_dim}/koopman.npy'))
 
@@ -35,12 +35,11 @@ states = jnp.array([jnp.load(os.path.join(state_pathname, i)) for i in state_ls]
 
 entries = []
 
-matrix_power = jit(jnp.linalg.matrix_power)
 
 @jit
 def measure(n):
     start_time = time()
-    predicted_latent = latent @ matrix_power(K, n)
+    predicted_latent = latent @ jnp.linalg.matrix_power(K, n)
     predicted_state = decode(predicted_latent)
     end_time = time()
 

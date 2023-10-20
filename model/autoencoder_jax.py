@@ -6,14 +6,14 @@ import haiku as hk
 import equinox as eqx
 import optax
 import orbax
-from config import j, dim
+from config import j, latent_shape, input_shape
 import os
-from utils import decode
+from encoder_decoder import decode
 
 key = jax.random.PRNGKey(5678)
 
-latent_dim = dim()
-input_shape = (4200, 244, 3)
+latent_dim = latent_shape()
+input_shape = input_shape()
 
 
 class UpSampling2D(hk.Module):

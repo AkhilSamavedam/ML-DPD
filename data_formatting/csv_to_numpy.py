@@ -8,7 +8,6 @@ from config import j
 
 ls = glob.glob(j('CSV/*.csv'))
 
-@jit
 def create_tensor(filename):
     df = pd.read_csv(filename)
     x_set = set(df['x'])

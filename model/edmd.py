@@ -1,9 +1,9 @@
 import os
 import re
 import jax.numpy as jnp
-from config import j, dim
+from config import j, latent_shape
 
-latent_dim = dim()
+latent_dim = latent_shape()
 
 def natural_sort_key(s):
     # Extract the numeric part from the filename using regex
