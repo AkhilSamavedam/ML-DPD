@@ -44,7 +44,6 @@ def read_and_process_file(input_file):
         fourth_line = next(f).strip()
         part1, part2, part3 = fourth_line.split()
 
-
         while True:
             # Create the output file name
             output_file = j(f'Dump/slice_{part1}.dump')

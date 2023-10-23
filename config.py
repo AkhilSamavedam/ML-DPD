@@ -10,7 +10,7 @@ def j(rel_path):
 
 
 def latent_shape():
-    return 1024
+    return 256
 
 
 def tensor_shape():

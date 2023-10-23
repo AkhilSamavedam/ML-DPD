@@ -22,8 +22,8 @@ build/
 # Miscellaneous
 *.swp
 .DS_Store
-model/test.py
-jobscripts/test.sh
+#model/test.py
+#jobscripts/test.sh
 
 # Data
 **/*.mnf
