@@ -1,4 +1,3 @@
-import tensorflow as tf
 import jax.numpy as jnp
 from glob import glob
 import os

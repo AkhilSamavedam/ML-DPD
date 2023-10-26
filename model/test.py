@@ -1,3 +1,5 @@
+import os
+import graphviz
 import optax
 import jax
 import haiku as hk
@@ -6,7 +8,9 @@ import jax.numpy as jnp
 from utils import UpSampling2D, Cropping2D
 from config import latent_shape, tensor_shape, j
 from time import time
+import cloudpickle as cpkl
 import orbax
+from glob import glob
 
 
 class Encoder(hk.Module):
@@ -97,7 +101,6 @@ decoder = hk.without_apply_rng(hk.transform(decoder))
 encoder_apply = jit(encoder.apply)
 decoder_apply = jit(decoder.apply)
 
-
 # Initialize parameters.
 rng = jax.random.PRNGKey(42)
 
@@ -107,23 +110,21 @@ params = hk.data_structures.merge(
 )
 
 
-# Define optimizer.
-x = jax.random.normal(rng, (5, 4200, 244, 3))
-latent = jax.random.normal(rng, (5, 1024))
-
-#print(hk.experimental.tabulate(encoder)(x))
-#print(hk.experimental.tabulate(decoder)(latent))
-
-"""
-for name, param in params.items():
-  if isinstance(param, dict):
-    print(f"{name}: {param['w'].shape}")
-"""
+def get_dataset(path, training_split):
+    ls = glob(f'{path}/*.npy')
+    data = jnp.expand_dims(jnp.zeros(tensor_shape()), axis=0)
+    for fn in ls:
+        data = jnp.concatenate((data, jnp.expand_dims(jnp.load(fn), axis=0)))
+    train_len = int(data.shape[0] * training_split)
+    #data = jax.random.permutation(rng, data, axis=0, independent=True)
+    return data[:train_len], data[train_len:]
 
 
 # Batch input data
-batch_size = 32
-train_data = x  # batch dataset
+batch_size = 2
+train_data, val_data = get_dataset(j(f'Numpy'), training_split=0.8)  # batch dataset
+print(train_data.shape)
+
 num_epochs = 10
 
 # Training loop
@@ -131,13 +132,16 @@ num_epochs = 10
 opt = optax.adam(learning_rate=1e-3)
 opt_state = opt.init(params)
 
+'''@jit
+def batch(data, batch_size):
+    return jnp.split(data, batch_size, axis=0)
+'''
 
 @jit
 def loss_fn(params, batch):
-    x = batch
-    latent_code = encoder_apply(params, x)
+    latent_code = encoder_apply(params, batch)
     reconstruction = decoder_apply(params, latent_code)
-    mse = jnp.mean(jnp.square(x - reconstruction))
+    mse = jnp.mean(jnp.square(batch - reconstruction))
     return mse
 
 
@@ -149,16 +153,40 @@ def step(params, opt_state, batch):
     return params, opt_state, loss
 
 
-for i, batch in enumerate(train_data):
+#batches = batch(train_data, batch_size)
+
+for epoch in range(num_epochs):
+    batch = jnp.zeros((5, 4200, 244, 3))
     t0 = time()
-    params, opt_state, loss_value = step(params, opt_state, jnp.expand_dims(batch, axis=0))
+    params, opt_state, loss_value = step(params, opt_state, batch)
     t = time()
-    print(f'step {i}, loss: {loss_value}, step_time: {t - t0}')
+    print(f'step {epoch}, loss: {loss_value}, step_time: {t - t0}')
+    print(f'Val Loss {loss_fn(params, val_data)}')
 
-encoder = jit(lambda x: encoder_apply(params, x))
-decoder = jit(lambda x: decoder_apply(params, x))
 
-t0 = time()
-print(encoder_apply(params, jax.random.normal(rng, (1, 4200, 244, 3))).shape)
-t = time()
-print(t - t0)
+@jit
+def encoder(x):
+    return encoder_apply(params, x)
+
+
+@jit
+def decoder(x):
+    return decoder_apply(params, x)
+
+
+with open(j(f'results/{latent_shape()}/encoder.hk'), 'wb') as f:
+    cpkl.dump(encoder, f)
+
+with open(j(f'results/{latent_shape()}/decoder.hk'), 'wb') as f:
+    cpkl.dump(decoder, f)
+
+
+def plot_model(name, model, x):
+    dot = hk.experimental.to_dot(model)(x)
+    graph = graphviz.Source(dot)
+    graph.render(j(f'results/{latent_shape()}/{name}'), view=False)
+    os.remove(j(f'results/{latent_shape()}/{name}'))
+
+
+plot_model('encoder', encoder, jnp.zeros((1, 4200, 244, 3)))
+plot_model('decoder', decoder, jnp.zeros((1, latent_shape())))

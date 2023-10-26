@@ -23,7 +23,9 @@ build/
 *.swp
 .DS_Store
 #model/test.py
-#jobscripts/test.sh
+jobscripts/test.sh
+old_results
+test.ipynb
 
 # Data
 **/*.mnf
@@ -34,6 +36,7 @@ build/
 **/*.ckpt.*
 **/checkpoint
 **/*.h5
+**/*.hk
 
 results/*/*.png
 results/*/*.pdf

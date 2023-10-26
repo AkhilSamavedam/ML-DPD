@@ -2,7 +2,6 @@ import tensorflow as tf
 import numpy as np
 import os
 from config import j, latent_shape, tensor_shape
-from utils import selu
 
 strategy = tf.distribute.MirroredStrategy()
 

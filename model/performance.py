@@ -6,7 +6,7 @@ import os
 import re
 import pandas as pd
 from config import j, latent_shape
-from time import time
+from timeit import default_timer as time
 from encoder_decoder import decode
 
 latent_dim = latent_shape()
