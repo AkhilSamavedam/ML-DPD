@@ -11,6 +11,7 @@ from time import time
 import cloudpickle as cpkl
 import orbax
 from glob import glob
+from utils import create_dataset_from_npy_folder
 
 
 class Encoder(hk.Module):
@@ -122,8 +123,8 @@ def get_dataset(path, training_split):
 
 # Batch input data
 batch_size = 2
-train_data, val_data = get_dataset(j(f'Numpy'), training_split=0.8)  # batch dataset
-print(train_data.shape)
+train_data, val_data, _ = create_dataset_from_npy_folder()
+
 
 num_epochs = 10
 
@@ -156,12 +157,14 @@ def step(params, opt_state, batch):
 #batches = batch(train_data, batch_size)
 
 for epoch in range(num_epochs):
-    batch = jnp.zeros((5, 4200, 244, 3))
-    t0 = time()
-    params, opt_state, loss_value = step(params, opt_state, batch)
-    t = time()
-    print(f'step {epoch}, loss: {loss_value}, step_time: {t - t0}')
-    print(f'Val Loss {loss_fn(params, val_data)}')
+    for batch in train_data:
+        batch = jnp.array(batch.numpy())
+        t0 = time()
+        params, opt_state, loss_value = step(params, opt_state, batch)
+        t = time()
+        print(f'step {epoch}, loss: {loss_value}, step_time: {t - t0}')
+    val_loss = jnp.mean(jnp.array([loss_fn(params, jnp.array(val_batch.numpy())) for val_batch in val_data]))
+    print(f'Validation Loss after epoch {epoch}: {val_loss}')
 
 
 @jit
@@ -179,14 +182,3 @@ with open(j(f'results/{latent_shape()}/encoder.hk'), 'wb') as f:
 
 with open(j(f'results/{latent_shape()}/decoder.hk'), 'wb') as f:
     cpkl.dump(decoder, f)
-
-
-def plot_model(name, model, x):
-    dot = hk.experimental.to_dot(model)(x)
-    graph = graphviz.Source(dot)
-    graph.render(j(f'results/{latent_shape()}/{name}'), view=False)
-    os.remove(j(f'results/{latent_shape()}/{name}'))
-
-
-plot_model('encoder', encoder, jnp.zeros((1, 4200, 244, 3)))
-plot_model('decoder', decoder, jnp.zeros((1, latent_shape())))

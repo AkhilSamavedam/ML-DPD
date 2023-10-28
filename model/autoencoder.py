@@ -1,7 +1,10 @@
 import tensorflow as tf
+import tensorflow.experimental.numpy as tnp
 import numpy as np
 import os
 from config import j, latent_shape, tensor_shape
+
+print(tf.config.experimental.tensor_float_32_execution_enabled())
 
 strategy = tf.distribute.MirroredStrategy()
 
@@ -44,8 +47,7 @@ def Decoder(latent_dim, input_shape):
     x = tf.keras.layers.UpSampling2D((2, 2))(x)
     x = tf.keras.layers.Conv2DTranspose(32, (3, 3), activation='relu', padding='same')(x)
     x = tf.keras.layers.UpSampling2D((2, 2))(x)
-    x = tf.keras.layers.Conv2DTranspose(3, (3, 3), activation='linear', padding='same')(x)
-    x = tf.keras.layers.Lambda(selu)(x)
+    x = tf.keras.layers.Conv2DTranspose(3, (3, 3), activation='selu', padding='same')(x)
     decoder_output = tf.keras.layers.Cropping2D(cropping=((0, 24), (0, 12)))(x)
     return tf.keras.Model(decoder_input, decoder_output)
 
@@ -55,6 +57,7 @@ def load_npy_files(file_paths):
         data = np.load(file_path)
         yield tf.convert_to_tensor(data, dtype=tf.float32)
 
+
 def create_dataset_from_npy_folder(folder_path=j('Numpy'), batch_size=32, train_val_split=0.8):
     file_list = [f for f in os.listdir(folder_path) if f.endswith('.npy')]
     file_list.sort()
@@ -63,6 +66,7 @@ def create_dataset_from_npy_folder(folder_path=j('Numpy'), batch_size=32, train_
         lambda: load_npy_files([os.path.join(folder_path, file) for file in file_list]),
         output_signature=tf.TensorSpec(shape=None, dtype=tf.float32)  # Variable shape
     )
+
 
     # Duplicate the dataset to get both input (x) and target (y) as the same data (for autoencoder)
     dataset = dataset.map(lambda x: (x, x))
@@ -86,6 +90,7 @@ def create_dataset_from_npy_folder(folder_path=j('Numpy'), batch_size=32, train_
     val_dataset = val_dataset.batch(batch_size * strategy.num_replicas_in_sync)
     val_dataset = val_dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
 
+    dataset = strategy.experimental_distribute_dataset(dataset=dataset)
 
     return train_dataset, val_dataset, file_list
 
@@ -123,7 +128,7 @@ checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
 )
 
 num_train_samples = len(file_list) * 0.8
-steps_per_epoch = int(np.ceil(num_train_samples / (32 * strategy.num_replicas_in_sync)))
+steps_per_epoch = int(tnp.ceil(num_train_samples / (32 * strategy.num_replicas_in_sync)))
 
 
 history = autoencoder.fit(

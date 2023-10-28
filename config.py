@@ -1,8 +1,8 @@
 import os.path
 import sys
+import tensorflow as tf
 
-from jax import jit
-import jax.numpy as jnp
+tf.config.experimental.enable_tensor_float_32_execution(enabled=True)
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 
