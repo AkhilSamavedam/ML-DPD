@@ -4,7 +4,9 @@ import numpy as np
 import os
 from config import j, latent_shape, tensor_shape
 
-print(tf.config.experimental.tensor_float_32_execution_enabled())
+print(tf.config.list_physical_devices('GPU'))
+
+print(f'TF-32 Enabled: {tf.config.experimental.tensor_float_32_execution_enabled()}')
 
 strategy = tf.distribute.MirroredStrategy()
 
@@ -90,8 +92,6 @@ def create_dataset_from_npy_folder(folder_path=j('Numpy'), batch_size=32, train_
     val_dataset = val_dataset.batch(batch_size * strategy.num_replicas_in_sync)
     val_dataset = val_dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
 
-    dataset = strategy.experimental_distribute_dataset(dataset=dataset)
-
     return train_dataset, val_dataset, file_list
 
 latent_dim = latent_shape()
@@ -135,7 +135,7 @@ history = autoencoder.fit(
     training_dataset,
     epochs=100,
     validation_data=val_dataset,
-    callbacks=[checkpoint_callback]  # Include the checkpoint callback during training
+    callbacks=[checkpoint_callback],  # Include the checkpoint callback during training
 )
 
 # Save the training history to a file (CSV format)
