@@ -9,5 +9,5 @@
 
 cd /gpfs/home/asamavedam/ML-DPD
 
-module load jax/0.4.18
+module load tensorflow2-gpu/2.2.0
 python model/edmd.py

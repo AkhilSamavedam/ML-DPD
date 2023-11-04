@@ -1,7 +1,7 @@
 import tensorflow as tf
-import jax
-import jax.numpy as jnp
-import haiku as hk
+#import jax
+#import jax.numpy as jnp
+#import haiku as hk
 import os
 from config import j, latent_shape, tensor_shape
 import numpy as np
@@ -10,7 +10,7 @@ import re
 def natural_sort_key(s):
     return [int(text) if text.isdigit() else text for text in re.split(r'(\d+)', s)]
 
-
+'''
 class UpSampling2D(hk.Module):
     def __init__(self, shape, method='nearest'):
         super().__init__()
@@ -53,12 +53,12 @@ class Cropping2D(hk.Module):
             if right == 0:
                 right = -x.shape[2]
             return x[:, top:-bottom, left:-right, :]
-
+'''
 
 def load_npy_files(file_paths):
     for file_path in file_paths:
-        data = jnp.load(file_path)
-        yield tf.convert_to_tensor(data, dtype=jnp.float32)
+        data = np.load(file_path)
+        yield tf.convert_to_tensor(data, dtype=tf.float32)
 
 
 def create_dataset_from_npy_folder(folder_path=j('Numpy'), batch_size=32, train_val_split=0.8):
@@ -67,10 +67,10 @@ def create_dataset_from_npy_folder(folder_path=j('Numpy'), batch_size=32, train_
 
     def generator():
         for file in file_list:
-            data = jnp.load(os.path.join(folder_path, file))
-            yield data.astype(jnp.float32)  # Make sure data is of dtype float32
+            data = np.load(os.path.join(folder_path, file))
+            yield data.astype(tf.float32)  # Make sure data is of dtype float32
 
-    dataset = tf.data.Dataset.from_generator(generator, output_signature=tf.TensorSpec(shape=(4200, 244, 3), dtype=jnp.float32))
+    dataset = tf.data.Dataset.from_generator(generator, output_signature=tf.TensorSpec(shape=(4200, 244, 3), dtype=tf.float32))
 
     # Duplicate the dataset to get both input (x) and target (y) as the same data (for autoencoder)
     # dataset = dataset.map(lambda x: (x, x))
