@@ -23,8 +23,8 @@ state_ls = [i for i in state_ls if i.endswith('.npy')]
 ls.sort(key=natural_sort_key)
 state_ls.sort(key=natural_sort_key)
 
-latent_vectors = tf.convert_to_tensor([np.load(os.path.join(pathname, i)) for i in ls])
-states = tf.convert_to_tensor([np.load(os.path.join(state_pathname, i)) for i in state_ls])
+latent_vectors = tf.convert_to_tensor([np.load(os.path.join(pathname, i)) for i in ls], dtype=tf.float32)
+states = tf.convert_to_tensor([np.load(os.path.join(state_pathname, i)) for i in state_ls], dtype=tf.float32)
 
 entries = []
 
