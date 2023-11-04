@@ -9,7 +9,6 @@
 
 cd /gpfs/home/asamavedam/ML-DPD
 
-module unload jax/0.4.18
-module load jax/0.4.18
+module load tensorflow2-gpu/2.2.0
 
 python data_formatting/create_latent.py

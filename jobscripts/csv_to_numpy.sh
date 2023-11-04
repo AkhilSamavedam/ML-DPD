@@ -9,9 +9,6 @@
 
 cd /gpfs/home/asamavedam/ML-DPD
 
-module load mvapich2/gcc/64/2.2rc1
-module load lammps/gpu/11Aug17
-
-module load jax/0.4.18
+module load tensorflow2-gpu/2.2.0
 python data_formatting/csv_to_numpy.py
 
