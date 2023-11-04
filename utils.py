@@ -5,6 +5,10 @@ import haiku as hk
 import os
 from config import j, latent_shape, tensor_shape
 import numpy as np
+import re
+
+def natural_sort_key(s):
+    return [int(text) if text.isdigit() else text for text in re.split(r'(\d+)', s)]
 
 
 class UpSampling2D(hk.Module):

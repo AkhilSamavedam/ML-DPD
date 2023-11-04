@@ -4,19 +4,14 @@ import os
 import re
 import pandas as pd
 from config import j, latent_shape
-from timeit import default_timer as time
 from encoder_decoder import decode
-from utils import koopman_power
+from utils import koopman_power, natural_sort_key
 from timeit import timeit
 
 latent_dim = latent_shape()
 
 pathname = j(f'latent/{latent_dim}')
 state_pathname = j('Numpy')
-
-
-def natural_sort_key(s):
-    return [int(text) if text.isdigit() else text for text in re.split(r'(\d+)', s)]
 
 
 ls = os.listdir(pathname)
@@ -37,7 +32,6 @@ entries = []
 def measure(n):
     predicted_latent = latent @ koopman_power(n)
     predicted_state = decode(predicted_latent)
-
 
     prediction_time = timeit('latent @ koopman_power(n)', 'from __main__ import koopman_power, n, latent')
 
@@ -81,4 +75,4 @@ for i in range(len(ls) - 10):
         print(f'{ls[i][:-4]} --> {ls[i + n][:-4]}')
     entries.append(dictionary)
 df = pd.DataFrame.from_records(entries, index=['timestep'])
-df.to_csv(j(f'results/{latent_dim}/performance.csv'))
+df.to_csv(j(f'results/{latent_dim}/performance_v100.csv'))
