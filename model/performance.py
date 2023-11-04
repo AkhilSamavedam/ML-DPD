@@ -23,8 +23,11 @@ state_ls = [i for i in state_ls if i.endswith('.npy')]
 ls.sort(key=natural_sort_key)
 state_ls.sort(key=natural_sort_key)
 
-latent_vectors = tf.convert_to_tensor([np.load(os.path.join(pathname, i)) for i in ls], dtype=tf.float32)
-states = tf.convert_to_tensor([np.load(os.path.join(state_pathname, i)) for i in state_ls], dtype=tf.float32)
+latent_vectors = np.array([np.load(os.path.join(pathname, i)) for i in ls], dtype=np.float32)
+states = np.array([np.expand_dims(np.load(os.path.join(state_pathname, i)), axis=0) for i in state_ls], dtype=np.float32)
+
+latent_vectors = tf.convert_to_tensor(latent_vectors, dtype=tf.float32)
+states = tf.convert_to_tensor(states, dtype=tf.float32)
 
 entries = []
 
@@ -33,13 +36,10 @@ def measure(n):
     predicted_latent = latent @ koopman_power(n)
     predicted_state = decode(predicted_latent)
 
-    prediction_time = timeit('latent @ koopman_power(n)', 'from __main__ import koopman_power, n, latent')
+    prediction_time = timeit('decode(latent @ koopman_power(n))', 'from __main__ import koopman_power, n, decode, latent', number=1)
 
     actual_latent = latent_vectors[i + n]
     actual_state = states[i + n]
-
-    latent_mean = tf.reduce_mean(actual_latent)
-    state_mean = tf.reduce_mean(actual_state)
 
     latent_rmse = tf.sqrt(tf.reduce_mean(tf.square(actual_latent - predicted_latent)))
     rmse = tf.sqrt(tf.reduce_mean(tf.square(actual_state - predicted_state)))
@@ -47,12 +47,7 @@ def measure(n):
     latent_mae = tf.reduce_mean(tf.abs(actual_latent - latent))
     mae = tf.reduce_mean(tf.abs(actual_state - predicted_state))
 
-    epsilon = 1e-13
-    latent_percent = 100 * tf.reduce_sum(tf.abs(predicted_latent - actual_latent)) / (
-            tf.reduce_sum(tf.abs(actual_latent)) + epsilon)
-    percent = 100 * tf.reduce_sum(tf.abs(predicted_state - actual_state)) / (tf.reduce_sum(tf.abs(actual_latent)) + epsilon)
-
-    return latent_rmse, rmse, latent_mae, mae, latent_percent, percent, prediction_time
+    return latent_rmse, rmse, latent_mae, mae, prediction_time
 
 
 for i in range(len(ls) - 10):
@@ -61,15 +56,12 @@ for i in range(len(ls) - 10):
     latent = latent_vectors[i]
     decode(tf.zeros((1, latent_dim)))  # To Make sure there is no lag on tensorflow startup
     for n in range(1, 10):
-        latent_rmse, rmse, latent_mae, mae, latent_percent, percent, prediction_time = measure(n)
+        latent_rmse, rmse, latent_mae, mae, prediction_time = measure(n)
 
         dictionary[f'latent-rmse_{n}'] = float(latent_rmse)
         dictionary[f'rmse_{n}'] = float(rmse)
         dictionary[f'latent-mae_{n}'] = float(latent_mae)
         dictionary[f'mae_{n}'] = float(mae)
-        dictionary[f'latent%_{n}'] = float(latent_percent)
-        dictionary[f'%_{n}'] = float(percent)
-
         dictionary[f'time_{n}'] = float(prediction_time * 1000)  # converting time to ms
 
         print(f'{ls[i][:-4]} --> {ls[i + n][:-4]}')

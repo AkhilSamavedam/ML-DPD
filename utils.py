@@ -109,3 +109,6 @@ def koopman_power(n):
     _, result = tf.while_loop(lambda i, _: i < n - 1, body, loop_vars=(i, result))
 
     return result
+
+
+koopman_power(1) # Forces compilation of koopman_power
