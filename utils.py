@@ -3,7 +3,8 @@ import jax
 import jax.numpy as jnp
 import haiku as hk
 import os
-from config import j
+from config import j, latent_shape, tensor_shape
+import numpy as np
 
 
 class UpSampling2D(hk.Module):
@@ -87,3 +88,20 @@ def create_dataset_from_npy_folder(folder_path=j('Numpy'), batch_size=32, train_
     val_dataset = val_dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
 
     return train_dataset, val_dataset, file_list
+
+
+K = tf.convert_to_tensor(np.load(j(f'results/{latent_shape()}/koopman.npy')), dtype=tf.float32)
+j = tf.constant(0)
+
+
+@tf.function
+def koopman_power(n):
+    def body(i, result):
+        return i + 1, result @ K
+
+    i = j
+    result = K
+
+    _, result = tf.while_loop(lambda i, _: i < n - 1, body, loop_vars=(i, result))
+
+    return result

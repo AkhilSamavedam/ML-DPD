@@ -5,7 +5,6 @@ from config import latent_shape, j
 import jax.numpy as jnp
 import os
 
-
 def plot_model(name, model, x):
     dot = hk.experimental.to_dot(model)(x)
     graph = graphviz.Source(dot)

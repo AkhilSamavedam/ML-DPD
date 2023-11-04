@@ -22,7 +22,7 @@ build/
 # Miscellaneous
 *.swp
 .DS_Store
-#model/test.py
+#model/autoencoder_jax.py
 jobscripts/test.sh
 old_results
 test.ipynb
