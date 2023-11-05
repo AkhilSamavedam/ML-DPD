@@ -49,4 +49,5 @@ MNF
 Dump
 
 # Include
-!results/*/performance.csv
+!results/*/performance_v100.csv
+!results/*/performance_a100.csv
