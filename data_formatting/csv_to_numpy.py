@@ -45,6 +45,6 @@ def create_tensor(filename):
     np.save(j('legend/y_list.npy'), y_list)
     return tensor, x_list, y_list
 
-with mp.Pool() as pool:
-    pool.map(create_tensor, ls)
-
+#with mp.Pool() as pool:
+#    pool.map(create_tensor, ls)
+[create_tensor(i) for i in ls]

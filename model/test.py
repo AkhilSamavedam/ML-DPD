@@ -1,27 +1,17 @@
-from jax import jit
-import tensorflow as tf
-from timeit import timeit
-from plot_model import plot_model
-import jax.numpy as jnp
-import tf2jax
 import numpy as np
+import matplotlib.pyplot as plt
+from config import j
+from glob import glob
+import seaborn as sns
+import cmasher as cmr
 
-A = tf.ones((256, 256), dtype=tf.float32)
-j = tf.constant(0)
-B = jnp.ones((256, 256), dtype=np.float32)
+ls = glob(j('Numpy/*.npy'))
 
-func = lambda x: tf.linalg.pinv((tf.linalg.pinv(x) + 1) @ x)
+data = np.load(ls[0])
 
-xla_func = tf.function(func)
+sns.heatmap(data=np.mean(data, axis=2), square=True, xticklabels=100, yticklabels=500, vmin=0, vmax=1.5, cmap=cmr.neon)
 
-xla_func(A)
+plt.savefig(fname=j('test.pdf'), dpi=600)
 
-converted_func, params = tf2jax.convert(xla_func, B)
+plt.show()
 
-jax_func = lambda x: converted_func(params, x)
-
-n = 20
-
-print(1000 * timeit('xla_func(A)', 'from __main__ import xla_func, func, A', number=n) / n)
-
-plot_model('test', jax_func, B)

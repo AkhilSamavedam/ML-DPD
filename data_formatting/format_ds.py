@@ -39,5 +39,6 @@ def make_csv_from_dump(filename):
     df.to_csv(output_filename)
     print(output_filename)
 
-with mp.Pool() as pool:
-    pool.map(make_csv_from_dump, ls)
+#with mp.Pool() as pool:
+#    pool.map(make_csv_from_dump, ls)
+[make_csv_from_dump(i) for i in ls]

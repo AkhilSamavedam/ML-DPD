@@ -70,5 +70,6 @@ def read_and_process_file(input_file):
 # Replace 'input_file.txt' with the path to your input file
 ls = glob.glob(j('MNF/*.mnf'))
 
-with mp.Pool() as pool:
-    pool.map(read_and_process_file, ls)
+#with mp.Pool() as pool:
+#    pool.map(read_and_process_file, ls)
+[read_and_process_file(i) for i in ls]
