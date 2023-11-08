@@ -51,3 +51,4 @@ Dump
 # Include
 !results/*/performance_v100.csv
 !results/*/performance_a100.csv
+!results/*/training_history.csv
