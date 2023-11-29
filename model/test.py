@@ -4,14 +4,11 @@ from config import j
 from glob import glob
 import seaborn as sns
 import cmasher as cmr
+import tensorflow as tf
+from timeit import timeit
 
 ls = glob(j('Numpy/*.npy'))
 
-data = np.load(ls[0])
+data = tf.convert_to_tensor([np.load(i) for i in ls])
 
-sns.heatmap(data=np.mean(data, axis=2), square=True, xticklabels=100, yticklabels=500, vmin=0, vmax=1.5, cmap=cmr.neon)
-
-plt.savefig(fname=j('test.pdf'), dpi=600)
-
-plt.show()
-
+# data has shape of (32, 4200, 244, 3)

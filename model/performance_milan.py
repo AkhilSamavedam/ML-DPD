@@ -24,10 +24,10 @@ ls.sort(key=natural_sort_key)
 state_ls.sort(key=natural_sort_key)
 
 latent_vectors = np.array([np.load(os.path.join(pathname, i)) for i in ls], dtype=np.float32)
-states = np.array([np.expand_dims(np.load(os.path.join(state_pathname, i)), axis=0) for i in state_ls], dtype=np.float32)
+#states = np.array([np.expand_dims(np.load(os.path.join(state_pathname, i)), axis=0) for i in state_ls], dtype=np.float32)
 
 latent_vectors = tf.convert_to_tensor(latent_vectors, dtype=tf.float32)
-states = tf.convert_to_tensor(states, dtype=tf.float32)
+#states = tf.convert_to_tensor(states, dtype=tf.float32)
 
 entries = []
 
@@ -39,7 +39,7 @@ def measure(n):
     prediction_time = timeit('decode(latent @ koopman_power(n))', 'from __main__ import koopman_power, n, decode, latent', number=1)
 
     actual_latent = latent_vectors[i + n]
-    actual_state = states[i + n]
+    actual_state = tf.convert_to_tensor(np.load(state_ls[i + n]), dtype=tf.float32)
 
     latent_rmse = tf.sqrt(tf.reduce_mean(tf.square(actual_latent - predicted_latent)))
     rmse = tf.sqrt(tf.reduce_mean(tf.square(actual_state - predicted_state)))

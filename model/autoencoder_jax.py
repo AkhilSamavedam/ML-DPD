@@ -12,6 +12,7 @@ import orbax
 from glob import glob
 from utils import create_dataset_from_npy_folder
 
+
 class UpSampling2D(hk.Module):
     def __init__(self, shape, method='nearest'):
         super().__init__()
@@ -222,3 +223,4 @@ with open(j(f'results/{latent_shape()}/encoder.hk'), 'wb') as f:
 
 with open(j(f'results/{latent_shape()}/decoder.hk'), 'wb') as f:
     cpkl.dump(decoder, f)
+
