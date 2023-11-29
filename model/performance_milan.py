@@ -39,7 +39,7 @@ def measure(n):
     prediction_time = timeit('decode(latent @ koopman_power(n))', 'from __main__ import koopman_power, n, decode, latent', number=1)
 
     actual_latent = latent_vectors[i + n]
-    actual_state = tf.convert_to_tensor(np.load(state_ls[i + n]), dtype=tf.float32)
+    actual_state = tf.convert_to_tensor(np.load(os.path.join(state_pathname, state_ls[i + n])), dtype=tf.float32)
 
     latent_rmse = tf.sqrt(tf.reduce_mean(tf.square(actual_latent - predicted_latent)))
     rmse = tf.sqrt(tf.reduce_mean(tf.square(actual_state - predicted_state)))
