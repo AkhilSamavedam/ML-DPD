@@ -7,4 +7,4 @@
 #SBATCH --error=/gpfs/scratch/asamavedam/err/test-err.%j
 cd /gpfs/home/asamavedam/ML-DPD
 module load tensorflow2-gpu/2.2.0
-python model/performance_milan.sh
+python model/performance_milan.py
