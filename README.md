@@ -9,5 +9,8 @@ URL: https://mrs.digitellinc.com/p/s/ds061011-convolutional-autoencoder-and-koop
 
 Alternative URL: https://www.mrs.org/meetings-events/presentation/2023_mrs_fall_meeting/2023_mrs_fall_meeting-3980724
 
-Work performed at the Garcia Center at Stonybrook University by Akhil Samavedam 
-Advised and supported by Dr. Yicong Zhu, Mr. Georgios Kementzidis, Prof. Yuefan Deng
+Work performed at the Garcia Center at Stonybrook University by Akhil Samavedam
+
+Advised and supported by Dr. Yicong Zhu, Mr. Georgios Kementzidis, and Prof. Yuefan Deng of SBU Dept. Applied Math & Statistics
+
+Computations and code execution performed on Seawulf High-Performance Compute Cluster at Stonybrook University
